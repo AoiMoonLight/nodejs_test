@@ -1,15 +1,23 @@
-var http = require ('http');
-var io = require('socket.io');
-http.createServer (function (request, response) {
-  response.writeHead (200,{'Content-Type': 'text/html'});
-  response.end('<h1>Welcome to node.js</h1>');
+var app = require ('http').createServer(handler)
+  , io = require('socket.io').listen(app)
+  , fs = require('fs')
 
-}).listen (52222, function() {
-  console.log('Listening on 127.0.0.1:52222');
-});
+app.listen(5222);
+function handler (req, res) {
+  fs.readFile(__dirname+'/index.html',
+  function(err,data) {
+    if (err) {
+      res.writeHead(500);
+      return res.end('Error loading index.html');
+    }
+    res.writeHead(200);
+    res.end(data);
+  });
+}
 
-io.on('connection', (socket) => {
-  socket.on('disconnect', () => {
-    console.log('disconnected');
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello : 'world'});
+  socket.on('my other event', function(data){
+    console.log(data);
   });
 });
