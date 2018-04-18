@@ -1,5 +1,5 @@
 var http = require ('http');
-var io = require('socket.io').listen(app);
+var io = require('socket.io');
 http.createServer (function (request, response) {
   response.writeHead (200,{'Content-Type': 'text/html'});
   response.end('<h1>Welcome to node.js</h1>');
