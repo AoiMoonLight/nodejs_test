@@ -7,3 +7,9 @@ http.createServer (function (request, response) {
 }).listen (52222, function() {
   console.log('Listening on 127.0.0.1:52222');
 });
+
+io.on('connection', (socket) => {
+  socket.on('disconnect', () => {
+    console.log('disconnected');
+  });
+});
