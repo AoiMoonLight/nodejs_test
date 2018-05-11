@@ -16,7 +16,7 @@
 			CryptoJS : HmacSHA512
 */
 
-var app = require('http').createServer(handler).listen(80),
+var app = require('http').createServer(handler).listen(52222),
 	io = require('socket.io').listen(app),
 	fs = require('fs'),
 	request = require('request');
