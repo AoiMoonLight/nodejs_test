@@ -16,7 +16,7 @@
 			CryptoJS : HmacSHA512
 */
 
-var app = require('http').createServer(handler).listen(52222),
+var app = require('http').createServer(handler).listen(80),
 	io = require('socket.io').listen(app),
 	fs = require('fs'),
 	request = require('request');
@@ -36,13 +36,13 @@ function handler(req, res){
 }
 
 io.sockets.on('connection', function(socket){
-	var xcoinAPI = new XCoinAPI('api key', 'api secret');
+	var xcoinAPI = new XCoinAPI('e0697d73ac7edc45023455f796067a3e', 'a0305425510d0c419c559b07afb06dab');
 	var rgParams = {
 		order_currency:'BTC',
 		payment_currency:'KRW'
 	};
-
-	xcoinAPI.xcoinApiCall('/info/account', rgParams);
+	xcoinAPI.xcoinApiCall('/public/ticker/ALL', rgParams);
+	xcoinAPI.xcoinApiCall('/info/balance', rgParams);
 });
 
 function XCoinAPI(api_key, api_secret){
@@ -84,12 +84,11 @@ XCoinAPI.prototype.request = function(strHost, strMethod, rgParams, httpHeaders)
 			console.log(error);
 			return;
 		}
-
+		console.log(rgResult)
 		var rgResultDecode = JSON.parse(rgResult);
 		io.sockets.emit('XCoinAPIResponse', rgResultDecode);
 	});
 }
-
 
 XCoinAPI.prototype._getHttpHeaders = function(endPoint, rgParams, api_key, api_secret) {
 	var strData	= http_build_query(rgParams);
