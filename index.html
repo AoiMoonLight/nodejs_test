@@ -15,11 +15,10 @@
 {
 	<label>"status"</label> : "<span id="status"></span>",
 	<label>"data"</label> : {
-		<!-- <label>"created"</label> : "<span id="created"></span>",
+		<label>"created"</label> : "<span id="created"></span>",
 		<label>"account_id"</label> : "<span id="account_id"></span>",
 		<label>"trade_fee"</label> : "<span id="trade_fee"></span>",
-		<label>"balance"</label> : "<span id="balance"></span>" -->
-		<label>"total_krw"</label> : "<span id="total_krw"></span>",
+		<label>"balance"</label> : "<span id="balance"></span>"
 	}
 }
 </pre>
@@ -40,15 +39,11 @@ var socket = io.connect('http://localhost:52222');
 socket.on('XCoinAPIResponse', function(rsData){
 	console.log(rsData);
 	if(rsData.status == '0000') {
-		// document.getElementById('status').innerHTML = rsData.status;
-		// document.getElementById('created').innerHTML = rsData.data.created;
-		// document.getElementById('account_id').innerHTML = rsData.data.account_id;
-		// document.getElementById('trade_fee').innerHTML = rsData.data.trade_fee;
-		// document.getElementById('balance').innerHTML = rsData.data.balance;
-		// document.getElementById('success').style.display = '';
-		// document.getElementById('fail').style.display = 'none';
 		document.getElementById('status').innerHTML = rsData.status;
-		document.getElementById('total_krw').innerHTML = rsData.data.total_krw;
+		document.getElementById('created').innerHTML = rsData.data.created;
+		document.getElementById('account_id').innerHTML = rsData.data.account_id;
+		document.getElementById('trade_fee').innerHTML = rsData.data.trade_fee;
+		document.getElementById('balance').innerHTML = rsData.data.balance;
 		document.getElementById('success').style.display = '';
 		document.getElementById('fail').style.display = 'none';
 	}

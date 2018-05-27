@@ -41,8 +41,8 @@ io.sockets.on('connection', function(socket){
 		order_currency:'BTC',
 		payment_currency:'KRW'
 	};
-	xcoinAPI.xcoinApiCall('/public/ticker/ALL', rgParams);
-	xcoinAPI.xcoinApiCall('/info/balance', rgParams);
+
+	xcoinAPI.xcoinApiCall('/info/account', rgParams);
 });
 
 function XCoinAPI(api_key, api_secret){
@@ -84,11 +84,12 @@ XCoinAPI.prototype.request = function(strHost, strMethod, rgParams, httpHeaders)
 			console.log(error);
 			return;
 		}
-		console.log(rgResult)
+
 		var rgResultDecode = JSON.parse(rgResult);
 		io.sockets.emit('XCoinAPIResponse', rgResultDecode);
 	});
 }
+
 
 XCoinAPI.prototype._getHttpHeaders = function(endPoint, rgParams, api_key, api_secret) {
 	var strData	= http_build_query(rgParams);
