@@ -109,12 +109,12 @@ wss.on('connection', function connection(ws, req) {
   console.log(ws.ip+" is connected");
   setTimeout(function () {// discard user if no response in 1 second after connection
     if(ws.authorized == true) {
-      console.log('login complete, get user wallet data');
+      console.log('login complete');
       db.get_wallet(ws.iduser, function(result) {
         if(result.status == 0) {
           ws.Bithumb_wallet = result.wallet;
-          ws.send('{"Bithumb_wallet":'+JSON.stringify(ws.Bithumb_wallet,replacer)+'}');
-          console.log('{"Bithumb_wallet":'+JSON.stringify(ws.Bithumb_wallet,replacer)+'}');
+          ws.send('{"Bithumb_wallet":'+JSON.stringify(ws.Bithumb_wallet)+'}');
+          console.log('Get user wallet data complete');
         }
       });
     }
