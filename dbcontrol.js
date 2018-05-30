@@ -110,6 +110,21 @@ exports.get_wallet = function(idUser, callback) {
       }
       else {
         response.wallet[item] = JSON.parse(JSON.stringify(rows[0]));
+        delete response.wallet[item]['owner'];
+        delete response.wallet[item]['idcurrencyState'];
+        delete response.wallet[item]['exchange_currency'];
+        response.wallet[item].principal = String(response.wallet[item].principal);
+        response.wallet[item].selected_algorithm = String(response.wallet[item].selected_algorithm);
+        response.wallet[item].bot_active = String(response.wallet[item].bot_active);
+        response.wallet[item].bot_bid_active = String(response.wallet[item].bot_bid_active);
+        response.wallet[item].bot_ask_active = String(response.wallet[item].bot_ask_active);
+        response.wallet[item].bot_alert_active = String(response.wallet[item].bot_alert_active);
+        response.wallet[item].total_currency = String(response.wallet[item].total_currency);
+        response.wallet[item].in_use_currency = String(response.wallet[item].in_use_currency);
+        response.wallet[item].available_currency = String(response.wallet[item].available_currency);
+        response.wallet[item].order = String(response.wallet[item].order);
+        response.wallet[item].min_unit = String(response.wallet[item].min_unit);
+        response.wallet[item].max_unit = String(response.wallet[item].max_unit);
         if(++counter == currency.length) {
           response.status = 0;
           callback(response);
@@ -118,6 +133,47 @@ exports.get_wallet = function(idUser, callback) {
     });
   })
 };
+
+exports.set_Wallet = function(idUser, wallet, callback) {
+  var response = {
+    status : -1,
+    wallet : {}
+  };
+  response.status = -1;
+  var counter = 0;
+  currency.forEach(function each(item) {
+    var cur_name = item.toLowerCase();
+    var db = {};
+    db.total_currency = Number(wallet['total_'+cur_name]);
+    db.in_use_currency = Number(wallet['in_use_'+cur_name]);
+    db.available_currency = Number(wallet['available_'+cur_name]);
+    if(++counter == currency.length) {
+      response.status = 0;
+      callback(response);
+    }
+    var sql = connection.query('UPDATE `wallet` SET ? WHERE `owner` = "'+idUser+'" AND `exchange_currency` = "Bithumb_'+item+'"', db,
+    function(err, result) {
+      if(err) {
+        console.log(err);
+      }
+    });
+  })
+}
+
+exports.update_principal = function(idUser, wallet, callback) {
+  var response = {
+    status : -1,
+    wallet : {}
+  };
+  response.status = -1;
+  var counter = 0;
+  var sql = connection.query('UPDATE `wallet` SET `principal` = '+Number(wallet.principal)+' WHERE `owner` = "'+idUser+'" AND `exchange_currency` = "Bithumb_'+wallet.currency+'"',
+  function(err, result) {
+    if(err) {
+      console.log(err);
+    }
+  });
+}
 
 exports.setUsers = function (idUser,exchange, openapi, secretapi) {
   var query_data = [idUser, openapi, secretapi];
