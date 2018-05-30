@@ -1,6 +1,7 @@
 exports.wallet = {
   'owner'              : '',
   'exchange_currency'  : '',
+  'principal'          : '',
   'selected_algorithm' : '',
   'bot_active'         : '',
   'bot_bid_active'     : '',
