@@ -1,5 +1,17 @@
 var	request = require('request');
 
+
+
+exports.wallet = function(api,callback) {
+  var xcoinAPI = new XCoinAPI(api.key, api.secret);
+  var rgParams = {
+    currency:'ALL'
+  };
+  xcoinAPI.xcoinApiCall('/info/balance', rgParams, function(res) {
+    callback (res);
+  });
+};
+
 exports.ticker = function(callback) {
 	var api_host = 'https://api.bithumb.com/public/ticker/ALL';
 	request({
@@ -63,7 +75,7 @@ function XCoinAPI(api_key, api_secret){
 	this.api_secret = api_secret;
 }
 
-XCoinAPI.prototype.xcoinApiCall = function(endPoint, params) {
+XCoinAPI.prototype.xcoinApiCall = function(endPoint, params, callback) {
 	var rgParams = {
 		'endPoint' : endPoint
 	};
@@ -76,11 +88,12 @@ XCoinAPI.prototype.xcoinApiCall = function(endPoint, params) {
 
 	var api_host = this.apiUrl + endPoint;
 	var httpHeaders = this._getHttpHeaders(endPoint, rgParams, this.api_key, this.api_secret);
-
-	var rgResult = this.request(api_host, 'POST', rgParams, httpHeaders);
+	var rgResult = this.request(api_host, 'POST', rgParams, httpHeaders, function(res) {
+    callback(res);
+  });
 }
 
-XCoinAPI.prototype.request = function(strHost, strMethod, rgParams, httpHeaders) {
+XCoinAPI.prototype.request = function(strHost, strMethod, rgParams, httpHeaders, callback) {
 	var rgHeaders = {};
 	if(httpHeaders) {
 		rgHeaders = httpHeaders;
@@ -96,9 +109,15 @@ XCoinAPI.prototype.request = function(strHost, strMethod, rgParams, httpHeaders)
 			console.log(error);
 			return;
 		}
-		console.log(rgResult)
-		var rgResultDecode = JSON.parse(rgResult);
-		io.sockets.emit('XCoinAPIResponse', rgResultDecode);
+		// console.log(rgResult)
+		try {
+      var rgResultDecode = JSON.parse(rgResult);
+    }
+    catch (err)
+    {
+      console.log(err);
+    }
+		callback(rgResultDecode);
 	});
 }
 
